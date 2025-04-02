@@ -2,7 +2,6 @@ import os
 import sys
 from io import StringIO
 import contextlib
-# In backend/expert_wrapper.py
 from .medical_expert_system import MedicalExpertSystem
 
 class ExpertWrapper:

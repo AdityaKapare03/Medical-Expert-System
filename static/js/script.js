@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM elements
+    // DOM eles
     const symptomInput = document.getElementById('symptom-input');
     const addSymptomBtn = document.getElementById('add-symptom');
     const searchSymptomsBtn = document.getElementById('search-symptoms');
@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Browse symptoms
     searchSymptomsBtn.addEventListener('click', loadSymptoms);
     searchSymptomInput.addEventListener('input', loadSymptoms);
     
@@ -134,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Browse diseases
     async function loadDiseases() {
         try {
             const response = await fetch('/api/diseases');
@@ -179,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Initial load
     loadSymptoms();
     loadDiseases();
 });
