@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.venv
+env.txt
+env.local
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# System files
+desktop.ini
+
+# Local development files
+instance/
+.webassets-cache
+
+# Flask secret key
+secret_key.txt
+
+# Large files
+*.zip
+*.tar.gz
+*.rar

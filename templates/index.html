@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Expert System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Medical Diagnostic Expert System</h1>
+        </header>
+        
+        <main>
+            <section id="diagnosis-section">
+                <h2>Symptom-Based Diagnosis</h2>
+                <div class="input-group">
+                    <input type="text" id="symptom-input" placeholder="Enter symptoms...">
+                    <button id="add-symptom">Add</button>
+                    <button id="search-symptoms">Search Symptoms</button>
+                </div>
+                <div id="selected-symptoms"></div>
+                <button id="diagnose-btn">Diagnose</button>
+                <div id="diagnosis-results"></div>
+            </section>
+            
+            <section id="browse-section">
+                <div class="browse-tabs">
+                    <button class="tab-btn active" data-tab="symptoms">Browse Symptoms</button>
+                    <button class="tab-btn" data-tab="diseases">Browse Diseases</button>
+                </div>
+                
+                <div id="symptoms-tab" class="tab-content active">
+                    <input type="text" id="search-symptom" placeholder="Search symptoms...">
+                    <div id="symptoms-list" class="scrollable-list"></div>
+                </div>
+                
+                <div id="diseases-tab" class="tab-content">
+                    <div id="diseases-list" class="scrollable-list"></div>
+                    <div id="disease-details"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
