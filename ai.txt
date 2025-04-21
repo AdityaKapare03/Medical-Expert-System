@@ -1,0 +1,284 @@
+import time
+# Iterate row by row
+class NQueens_Backtracking:
+    def __init__(self) -> None:
+        self.size = int(input("Enter size of chessboard: "))
+        self.board = [[False]*self.size for _ in range(self.size)]
+        self.count = 0
+    def printBoard(self):
+        for row in self.board:
+            for ele in row:
+                if ele == True:
+                    print("Q",end=" ")
+                else:
+                    print("X",end=" ")
+            print()
+        print()
+    
+    def isSafe(self,row:int,col:int) -> bool:
+
+        # Check Column(above and below of the (row,col))
+        for i in self.board:
+            if i[col] == True:
+                return False
+        
+        # Check backward slash(\) diagonal only in above direction
+        i = row
+        j = col
+        while i >= 0 and j >= 0:
+            if self.board[i][j] == True:
+                return False
+            i -= 1
+            j -= 1
+        
+        # Check forward slash diagonal(/) only in above direction
+        i = row
+        j = col
+        while i >= 0 and j < self.size:
+            if self.board[i][j] == True:
+                return False
+            i -= 1
+            j += 1
+        
+        return True
+    
+    def solve(self,row:int):
+        if row == self.size:
+            self.count += 1
+            self.printBoard()
+            return
+        
+        for col in range(self.size):
+            if self.isSafe(row,col) == True:
+                self.board[row][col] = True
+                self.solve(row+1)
+                self.board[row][col] = False
+
+solver = NQueens_Backtracking()
+start = time.time()
+solver.solve(0)
+print(solver.count)
+print(f"Time taken: {time.time() - start}")
+
+
+#A star
+from typing import List
+from copy import deepcopy
+
+class Node:
+    def __init__(self,matrix : List[List[int]], g_x : int,goal: List[List[int]]) -> None:
+        self.matrix = matrix
+        self.g_x = g_x
+        self.h_x = 0
+        self.f_x = 0
+        self.goal = goal
+        self.n = 3
+        self.calculate_h_x()
+        self.calculate_f_x()
+
+    def locateZero(self):
+        for i,row in enumerate(self.matrix):
+            for j,ele in enumerate(row):
+                if ele == 0:
+                    return (i,j)
+    
+    def generateChildren(self):
+        x,y = self.locateZero()
+        possible = [
+            (x+1,y),
+            (x,y+1),
+            (x-1,y),
+            (x,y-1)
+        ]
+        children : List[Node] = []
+        for i,j in possible:
+            if i >= 0 and i < self.n and j >= 0 and j < self.n:
+                child = deepcopy(self.matrix)
+                child[x][y], child[i][j] = child[i][j], child[x][y]
+                children.append(Node(child,self.g_x + 1,self.goal))
+        return children
+    
+    def calculate_h_x(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if self.goal[i][j] != self.matrix[i][j]:
+                    self.h_x += 1
+        
+    def calculate_f_x(self):
+        self.f_x = self.g_x + self.h_x
+    
+    def printNode(self):
+        print(f"g(x) = {self.g_x}")
+        print(f"h(x) = {self.h_x}")
+        print(f"f(x) = {self.f_x}")
+        for i,row in enumerate(self.matrix):
+            for j,ele in enumerate(row):
+                print(ele,end=" ")
+            print()
+        print()
+
+class Puzzle:
+    def __init__(self) -> None:
+        self.visited : List[Node] = []
+        self.expanded : List[Node] = []
+        self.n = 3
+        self.initial = [[] for _ in range(self.n)]
+        self.goal = [[] for _ in range(self.n)]
+    
+    def input(self, variable):
+        print("Enter state.\n0 represents blank tile")
+        for i in range(self.n):
+            variable[i] = [int(j) for j in input().split(" ")]
+    
+    def solve(self):
+        matrices= []
+        print("Enter initial state")
+        self.input(self.initial)
+        print("Enter goal state")
+        self.input(self.goal)
+        print("\nSTART")
+        current = Node(self.initial,0,self.goal)
+        matrices.append(current.matrix)
+        self.expanded.append(current)
+        while True:
+            current = self.expanded.pop(0)
+            if current.h_x == 0:
+                break
+            current.printNode()
+            for child in current.generateChildren():
+                if child.matrix not in matrices:
+                    matrices.append(child.matrix)
+                    self.expanded.append(child)
+            self.visited.append(current)
+            self.expanded.sort(key=lambda x : x.f_x,reverse=False)
+        current.printNode()
+
+
+puzzle = Puzzle()
+puzzle.solve()
+
+#bfs dfs
+from collections import deque
+from typing import Deque, List
+
+class Graph:
+    def __init__(self) -> None:
+        self.n = int(input("Enter number of nodes"))
+        self.nodes = {i+1 : [] for i in range(self.n)}
+    
+    def addEdge(self,start:int,end:int):
+        self.nodes[start].append(end)
+        self.nodes[end].append(start)
+    
+    def printGraph(self):
+        for node, list in self.nodes.items():
+            print(f"{node} -> ",end="")
+            for vertex in list:
+                print(vertex,end=" ")
+            print()
+    
+    def dfsHelper(self,current : int,visited : List[bool]):
+        print(current,end= " ")
+        visited[current] = True
+        for adjacentNode in self.nodes[current]:
+            if visited[adjacentNode] == False:
+                self.dfsHelper(adjacentNode,visited)
+    def dfs(self,start : int):
+        visited = [False] * (self.n + 1)
+        print(f"DFS from {start}: ",end="")
+        self.dfsHelper(start,visited)
+        print()
+    
+    def bfs(self,start:int):
+        queue = deque()
+        visited = [False] * (self.n + 1)
+        print(f"BFS from {start}: ",end="")
+        queue.append(start)
+        visited[start] = True
+        self.bfsHelper(queue,visited)
+        print()
+
+    def bfsHelper(self,queue : Deque,visited: List[bool]):
+        if len(queue) == 0:
+            return
+        current = queue.popleft()
+        print(current,end=" ")
+        
+        for adjacentNode in self.nodes[current]:
+            if visited[adjacentNode] == False:
+                queue.append(adjacentNode)
+                visited[adjacentNode] = True
+        self.bfsHelper(queue,visited)
+
+g = Graph()
+g.addEdge(1,2)
+g.addEdge(1,3)
+g.addEdge(1,4)
+g.addEdge(5,2)
+g.addEdge(5,3)
+g.addEdge(5,4)
+g.printGraph()
+g.dfs(3)
+g.bfs(1)
+
+#djikshatra
+class Dijkstra:
+    def __init__(self) -> None:
+        self.vertices = int(input("Enter number of vertices: "))
+        self.graph = [[float('inf')]*self.vertices for _ in range(self.vertices)]
+
+        self.edges = int(input("Enter number of edges: "))
+        print("Start\tEnd\tDistance")
+        for inp in range(self.edges):
+            v1,v2,e = input().split(" ")
+            v1 = int(v1)
+            v2 = int(v2)
+            e = int(e)
+            self.graph[v1-1][v2-1] = e
+            self.graph[v2 - 1][v1- 1] = e
+        
+        for i in range(self.vertices):
+            self.graph[i][i] = 0
+    
+    def printMatrix(self):
+        print("\t",end="")
+        for i in range(self.vertices):
+            print(i+1,end="\t")
+        print()
+        for i,row in enumerate(self.graph):
+            print(i+1,end="\t")
+            for ele in row:
+                print(ele,end="\t")
+            print()
+    
+    def solve(self):
+        source = int(input("Enter starting node:"))
+        visited = set()
+        distances = [float('inf')] * self.vertices
+        distances[source - 1] = 0
+
+        while True:
+            minDist = float('inf')
+            minId = -1
+            for i,dist in enumerate(distances):
+                if dist < minDist and i not in visited:
+                    minDist = dist
+                    minId = i
+            
+            if minId == -1:
+                break
+
+            for i,distance in enumerate(self.graph[minId]):
+                if distances[i] > minDist + distance:
+                    distances[i] = minDist + distance
+            visited.add(minId)
+        
+        print(f"Distances from source {source}:")
+        for i,distance in enumerate(distances):
+            print(f"Distance to {i+1}: {distance}")
+
+
+
+solver = Dijkstra()
+solver.printMatrix()
+solver.solve()
